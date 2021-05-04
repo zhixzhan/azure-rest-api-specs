@@ -3088,20 +3088,26 @@
           "Create a Windows vm with a patch setting patchMode of AutomaticByOS.": {
             "$ref": "./examples/CreateAWindowsVmWithPatchSettingModeOfAutomaticByOS.json"
           },
-          "Create a Windows vm with a patch setting patchMode of AutomaticByPlatform.": {
-            "$ref": "./examples/CreateAWindowsVmWithPatchSettingModeOfAutomaticByPlatform.json"
+          "Create a Windows vm with patch settings patchMode and assessmentMode set to AutomaticByPlatform.": {
+            "$ref": "./examples/CreateAWindowsVmWithPatchSettingModesOfAutomaticByPlatform.json"
           },
           "Create a Windows vm with a patch setting patchMode of Manual.": {
             "$ref": "./examples/CreateAWindowsVmWithPatchSettingModeOfManual.json"
           },
+          "Create a Windows vm with a patch setting assessmentMode of ImageDefault.": {
+            "$ref": "./examples/CreateAWindowsVmWithPatchSettingAssessmentModeOfImageDefault.json"
+          },
           "Create a Windows vm with a patch setting patchMode of AutomaticByPlatform and enableHotpatching set to true.": {
             "$ref": "./examples/CreateAWindowsVmWithPatchSettingModeOfAutomaticByPlatformAndEnableHotPatchingTrue.json"
           },
-          "Create a Linux vm with a patch setting patchMode of AutomaticByPlatform.": {
-            "$ref": "./examples/CreateALinuxVmWithPatchSettingModeOfAutomaticByPlatform.json"
+          "Create a Linux vm with a patch settings patchMode and assessmentMode set to AutomaticByPlatform.": {
+            "$ref": "./examples/CreateALinuxVmWithPatchSettingModesOfAutomaticByPlatform.json"
           },
           "Create a Linux vm with a patch setting patchMode of ImageDefault.": {
             "$ref": "./examples/CreateALinuxVmWithPatchSettingModeOfImageDefault.json"
+          },
+          "Create a Linux vm with a patch setting assessmentMode of ImageDefault.": {
+            "$ref": "./examples/CreateALinuxVmWithPatchSettingAssessmentModeOfImageDefault.json"
           },
           "Create a vm with an extensions time budget.": {
             "$ref": "./examples/CreateAVmWithExtensionsTimeBudget.json"
@@ -8939,14 +8945,12 @@
     },
     "StorageAccountType": {
       "type": "string",
-      "description": "Specifies the storage account type for the managed disk. Managed OS disk storage account type can only be set when you create the scale set. NOTE: UltraSSD_LRS can only be used with data disks. It cannot be used with OS Disk. Standard_LRS uses Standard HDD. StandardSSD_LRS uses Standard SSD. Premium_LRS uses Premium SSD. UltraSSD_LRS uses Ultra disk. Premium_ZRS uses Premium SSD zone redundant storage. StandardSSD_ZRS uses Standard SSD zone redundant storage. For more information regarding disks supported for Windows Virtual Machines, refer to https://docs.microsoft.com/en-us/azure/virtual-machines/windows/disks-types and, for Linux Virtual Machines, refer to https://docs.microsoft.com/en-us/azure/virtual-machines/linux/disks-types",
+      "description": "Specifies the storage account type for the managed disk. Managed OS disk storage account type can only be set when you create the scale set. NOTE: UltraSSD_LRS can only be used with data disks. It cannot be used with OS Disk. Standard_LRS uses Standard HDD. StandardSSD_LRS uses Standard SSD. Premium_LRS uses Premium SSD. UltraSSD_LRS uses Ultra disk. For more information regarding disks supported for Windows Virtual Machines, refer to https://docs.microsoft.com/en-us/azure/virtual-machines/windows/disks-types and, for Linux Virtual Machines, refer to https://docs.microsoft.com/en-us/azure/virtual-machines/linux/disks-types",
       "enum": [
         "Standard_LRS",
         "Premium_LRS",
         "StandardSSD_LRS",
-        "UltraSSD_LRS",
-        "Premium_ZRS",
-        "StandardSSD_ZRS"
+        "UltraSSD_LRS"
       ],
       "x-ms-enum": {
         "name": "StorageAccountTypes",
@@ -10258,7 +10262,7 @@
         },
         "hyperVGeneration": {
           "$ref": "#/definitions/HyperVGenerationType",
-          "description": "Specifies the HyperVGenerationType of the VirtualMachine created from the image. From API Version 2019-03-01 if the image source is a blob, then we need the user to specify the value, if the source is managed resource like disk or snapshot, we may require the user to specify the property if we cannot deduce it from the source managed resource."
+          "description": "Gets the HyperVGenerationType of the VirtualMachine created from the image"
         }
       },
       "description": "Describes the properties of an Image."
@@ -12551,6 +12555,18 @@
         "enableHotpatching": {
           "type": "boolean",
           "description": "Enables customers to patch their Azure VMs without requiring a reboot. For enableHotpatching, the 'provisionVMAgent' must be set to true and 'patchMode' must be set to 'AutomaticByPlatform'."
+        },
+        "assessmentMode": {
+          "type": "string",
+          "description": "Specifies the mode of VM Guest patch assessment for the IaaS virtual machine.<br /><br /> Possible values are:<br /><br /> **ImageDefault** - You control the timing of patch assessments on a virtual machine.<br /><br /> **AutomaticByPlatform** - The platform will trigger periodic patch assessments. The property provisionVMAgent must be true. ",
+          "enum": [
+            "ImageDefault",
+            "AutomaticByPlatform"
+          ],
+          "x-ms-enum": {
+            "name": "WindowsPatchAssessmentMode",
+            "modelAsString": true
+          }
         }
       },
       "description": "Specifies settings related to VM Guest Patching on Windows."
@@ -12566,6 +12582,18 @@
           ],
           "x-ms-enum": {
             "name": "LinuxVMGuestPatchMode",
+            "modelAsString": true
+          }
+        },
+        "assessmentMode": {
+          "type": "string",
+          "description": "Specifies the mode of VM Guest Patch Assessment for the IaaS virtual machine.<br /><br /> Possible values are:<br /><br /> **ImageDefault** - You control the timing of patch assessments on a virtual machine. <br /><br /> **AutomaticByPlatform** - The platform will trigger periodic patch assessments. The property provisionVMAgent must be true.",
+          "enum": [
+            "ImageDefault",
+            "AutomaticByPlatform"
+          ],
+          "x-ms-enum": {
+            "name": "LinuxPatchAssessmentMode",
             "modelAsString": true
           }
         }
@@ -12748,4 +12776,2669 @@
       "description": "Client Api Version."
     }
   }
-}
+}   "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachineScaleSets/{vmScaleSetName}/virtualmachines/{instanceId}/retrieveBootDiagnosticsData": {
+      "post": {
+        "tags": [
+          "VirtualMachineScaleSetVMs"
+        ],
+        "operationId": "VirtualMachineScaleSetVMs_RetrieveBootDiagnosticsData",
+        "description": "The operation to retrieve SAS URIs of boot diagnostic logs for a virtual machine in a VM scale set.",
+        "parameters": [
+          {
+            "name": "resourceGroupName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The name of the resource group."
+          },
+          {
+            "name": "vmScaleSetName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The name of the VM scale set."
+          },
+          {
+            "name": "instanceId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The instance ID of the virtual machine."
+          },
+          {
+            "name": "sasUriExpirationTimeInMinutes",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32",
+            "description": "Expiration duration in minutes for the SAS URIs with a value between 1 to 1440 minutes. <br><br>NOTE: If not specified, SAS URIs will be generated with a default expiration duration of 120 minutes."
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/RetrieveBootDiagnosticsDataResult"
+            }
+          },
+          "default": {
+            "description": "Error response describing why the operation failed.",
+            "schema": {
+              "$ref": "#/definitions/CloudError"
+            }
+          }
+        },
+        "x-ms-long-running-operation": false,
+        "x-ms-examples": {
+          "RetrieveBootDiagnosticsData of a virtual machine.": {
+            "$ref": "./examples/RetrieveBootDiagnosticsDataVMScaleSetVM.json"
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachineScaleSets/{vmScaleSetName}/virtualmachines/{instanceId}/performMaintenance": {
+      "post": {
+        "tags": [
+          "VirtualMachineScaleSetVMs"
+        ],
+        "operationId": "VirtualMachineScaleSetVMs_PerformMaintenance",
+        "description": "Performs maintenance on a virtual machine in a VM scale set.",
+        "parameters": [
+          {
+            "name": "resourceGroupName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The name of the resource group."
+          },
+          {
+            "name": "vmScaleSetName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The name of the VM scale set."
+          },
+          {
+            "name": "instanceId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The instance ID of the virtual machine."
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "202": {
+            "description": "Accepted"
+          }
+        },
+        "x-ms-long-running-operation": true
+      }
+    },
+    "/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachineScaleSets/{vmScaleSetName}/virtualMachines/{instanceId}/simulateEviction": {
+      "post": {
+        "tags": [
+          "VirtualMachineScaleSetVMs"
+        ],
+        "operationId": "VirtualMachineScaleSetVMs_SimulateEviction",
+        "description": "The operation to simulate the eviction of spot virtual machine in a VM scale set.",
+        "parameters": [
+          {
+            "name": "resourceGroupName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The name of the resource group."
+          },
+          {
+            "name": "vmScaleSetName",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The name of the VM scale set."
+          },
+          {
+            "name": "instanceId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The instance ID of the virtual machine."
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "x-ms-long-running-operation": false,
+        "x-ms-examples": {
+          "Simulate Eviction a virtual machine.": {
+            "$ref": "./examples/SimulateEvictionOfVmssVM.json"
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/providers/Microsoft.Compute/locations/{location}/logAnalytics/apiAccess/getRequestRateByInterval": {
+      "post": {
+        "tags": [
+          "LogAnalytics"
+        ],
+        "operationId": "LogAnalytics_ExportRequestRateByInterval",
+        "x-ms-examples": {
+          "Export logs which contain all Api requests made to Compute Resource Provider within the given time period broken down by intervals.": {
+            "$ref": "./examples/LogAnalyticsRequestRateByInterval.json"
+          }
+        },
+        "description": "Export logs that show Api requests made by this subscription in the given time window to show throttling activities.",
+        "parameters": [
+          {
+            "name": "parameters",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RequestRateByIntervalInput"
+            },
+            "description": "Parameters supplied to the LogAnalytics getRequestRateByInterval Api."
+          },
+          {
+            "name": "location",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The location upon which virtual-machine-sizes is queried.",
+            "pattern": "^[-\\w\\._]+$"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/LogAnalyticsOperationResult"
+            }
+          },
+          "202": {
+            "description": "Accepted"
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/providers/Microsoft.Compute/locations/{location}/logAnalytics/apiAccess/getThrottledRequests": {
+      "post": {
+        "tags": [
+          "LogAnalytics"
+        ],
+        "operationId": "LogAnalytics_ExportThrottledRequests",
+        "x-ms-examples": {
+          "Export logs which contain all throttled Api requests made to Compute Resource Provider within the given time period.": {
+            "$ref": "./examples/LogAnalyticsThrottledRequests.json"
+          }
+        },
+        "description": "Export logs that show total throttled Api requests for this subscription in the given time window.",
+        "parameters": [
+          {
+            "name": "parameters",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ThrottledRequestsInput"
+            },
+            "description": "Parameters supplied to the LogAnalytics getThrottledRequests Api."
+          },
+          {
+            "name": "location",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "The location upon which virtual-machine-sizes is queried.",
+            "pattern": "^[-\\w\\._]+$"
+          },
+          {
+            "$ref": "#/parameters/ApiVersionParameter"
+          },
+          {
+            "$ref": "#/parameters/SubscriptionIdParameter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/LogAnalyticsOperationResult"
+            }
+          },
+          "202": {
+            "description": "Accepted"
+          }
+        },
+        "x-ms-long-running-operation": true,
+        "x-ms-long-running-operation-options": {
+          "final-state-via": "azure-async-operation"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ComputeOperationListResult": {
+      "properties": {
+        "value": {
+          "type": "array",
+          "readOnly": true,
+          "items": {
+            "$ref": "#/definitions/ComputeOperationValue"
+          },
+          "description": "The list of compute operations"
+        }
+      },
+      "description": "The List Compute Operation operation response."
+    },
+    "ComputeOperationValue": {
+      "properties": {
+        "origin": {
+          "type": "string",
+          "readOnly": true,
+          "description": "The origin of the compute operation."
+        },
+        "name": {
+          "type": "string",
+          "readOnly": true,
+          "description": "The name of the compute operation."
+        },
+        "display": {
+          "x-ms-client-flatten": true,
+          "$ref": "#/definitions/ComputeOperationValueDisplay"
+        }
+      },
+      "description": "Describes the properties of a Compute Operation value."
+    },
+    "ComputeOperationValueDisplay": {
+      "properties": {
+        "operation": {
+          "type": "string",
+          "readOnly": true,
+          "description": "The display name of the compute operation."
+        },
+        "resource": {
+          "type": "string",
+          "readOnly": true,
+          "description": "The display name of the resource the operation applies to."
+        },
+        "description": {
+          "type": "string",
+          "readOnly": true,
+          "description": "The description of the operation."
+        },
+        "provider": {
+          "type": "string",
+          "readOnly": true,
+          "description": "The resource provider for the operation."
+        }
+      },
+      "description": "Describes the properties of a Compute Operation Value Display."
+    },
+    "DisallowedConfiguration": {
+      "properties": {
+        "vmDiskType": {
+          "type": "string",
+          "description": "VM disk types which are disallowed.",
+          "enum": [
+            "None",
+            "Unmanaged"
+          ],
+          "x-ms-enum": {
+            "name": "VmDiskTypes",
+            "modelAsString": true
+          }
+        }
+      },
+      "description": "Specifies the disallowed configuration for a virtual machine image."
+    },
+    "RetrieveBootDiagnosticsDataResult": {
+      "properties": {
+        "consoleScreenshotBlobUri": {
+          "type": "string",
+          "readOnly": true,
+          "description": "The console screenshot blob URI"
+        },
+        "serialConsoleLogBlobUri": {
+          "type": "string",
+          "readOnly": true,
+          "description": "The serial console log blob URI."
+        }
+      },
+      "description": "The SAS URIs of the console screenshot and serial log blobs."
+    },
+    "HyperVGenerationType": {
+      "type": "string",
+      "description": "Specifies the HyperVGeneration Type",
+      "enum": [
+        "V1",
+        "V2"
+      ],
+      "x-ms-enum": {
+        "name": "HyperVGenerationTypes",
+        "modelAsString": true
+      }
+    },
+    "InstanceViewStatus": {
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": "The status code."
+        },
+        "level": {
+          "type": "string",
+          "description": "The level code.",
+          "enum": [
+            "Info",
+            "Warning",
+            "Error"
+          ],
+          "x-ms-enum": {
+            "name": "StatusLevelTypes",
+            "modelAsString": false
+          }
+        },
+        "displayStatus": {
+          "type": "string",
+          "description": "The short localizable label for the status."
+        },
+        "message": {
+          "type": "string",
+          "description": "The detailed status message, including for alerts and error messages."
+        },
+        "time": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The time of the status."
+        }
+      },
+      "description": "Instance view status."
+    },
+    "AvailabilitySetProperties": {
+      "properties": {
+        "platformUpdateDomainCount": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Update Domain count."
+        },
+        "platformFaultDomainCount": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Fault Domain count."
+        },
+        "virtualMachines": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SubResource"
+          },
+          "description": "A list of references to all virtual machines in the availability set."
+        },
+        "proximityPlacementGroup": {
+          "$ref": "#/definitions/SubResource",
+          "description": "Specifies information about the proximity placement group that the availability set should be assigned to. <br><br>Minimum api-version: 2018-04-01."
+        },
+        "statuses": {
+          "readOnly": true,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/InstanceViewStatus"
+          },
+          "description": "The resource status information."
+        }
+      },
+      "description": "The instance view of a resource."
+    },
+    "AvailabilitySetSkuType": {
+      "type": "string",
+      "description": "Specifies the sku of an Availability Set. Use 'Aligned' for virtual machines with managed disks and 'Classic' for virtual machines with unmanaged disks. Default value is 'Classic'.",
+      "enum": [
+        "Classic",
+        "Aligned"
+      ],
+      "x-ms-enum": {
+        "name": "AvailabilitySetSkuTypes",
+        "modelAsString": true
+      }
+    },
+    "AvailabilitySet": {
+      "properties": {
+        "properties": {
+          "x-ms-client-flatten": true,
+          "$ref": "#/definitions/AvailabilitySetProperties"
+        },
+        "sku": {
+          "$ref": "#/definitions/Sku",
+          "description": "Sku of the availability set, only name is required to be set. See AvailabilitySetSkuTypes for possible set of values. Use 'Aligned' for virtual machines with managed disks and 'Classic' for virtual machines with unmanaged disks. Default value is 'Classic'."
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/Resource"
+        }
+      ],
+      "description": "Specifies information about the availability set that the virtual machine should be assigned to. Virtual machines specified in the same availability set are allocated to different nodes to maximize availability. For more information about availability sets, see [Manage the availability of virtual machines](https://docs.microsoft.com/azure/virtual-machines/virtual-machines-windows-manage-availability?toc=%2fazure%2fvirtual-machines%2fwindows%2ftoc.json). <br><br> For more information on Azure planned maintenance, see [Planned maintenance for virtual machines in Azure](https://docs.microsoft.com/azure/virtual-machines/virtual-machines-windows-planned-maintenance?toc=%2fazure%2fvirtual-machines%2fwindows%2ftoc.json) <br><br> Currently, a VM can only be added to availability set at creation time. An existing VM cannot be added to an availability set."
+    },
+    "AvailabilitySetUpdate": {
+      "properties": {
+        "properties": {
+          "x-ms-client-flatten": true,
+          "$ref": "#/definitions/AvailabilitySetProperties"
+        },
+        "sku": {
+          "$ref": "#/definitions/Sku",
+          "description": "Sku of the availability set"
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/UpdateResource"
+        }
+      ],
+      "description": "Specifies information about the availability set that the virtual machine should be assigned to. Only tags may be updated."
+    },
+    "AvailabilitySetListResult": {
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AvailabilitySet"
+          },
+          "description": "The list of availability sets"
+        },
+        "nextLink": {
+          "type": "string",
+          "description": "The URI to fetch the next page of AvailabilitySets. Call ListNext() with this URI to fetch the next page of AvailabilitySets."
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "description": "The List Availability Set operation response."
+    },
+    "SubResourceWithColocationStatus": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/SubResource"
+        }
+      ],
+      "properties": {
+        "colocationStatus": {
+          "$ref": "#/definitions/InstanceViewStatus",
+          "description": "Describes colocation status of a resource in the Proximity Placement Group."
+        }
+      }
+    },
+    "ProximityPlacementGroupProperties": {
+      "properties": {
+        "proximityPlacementGroupType": {
+          "type": "string",
+          "description": "Specifies the type of the proximity placement group. <br><br> Possible values are: <br><br> **Standard** : Co-locate resources within an Azure region or Availability Zone. <br><br> **Ultra** : For future use.",
+          "enum": [
+            "Standard",
+            "Ultra"
+          ],
+          "x-ms-enum": {
+            "name": "ProximityPlacementGroupType",
+            "modelAsString": true
+          }
+        },
+        "virtualMachines": {
+          "readOnly": true,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SubResourceWithColocationStatus"
+          },
+          "description": "A list of references to all virtual machines in the proximity placement group."
+        },
+        "virtualMachineScaleSets": {
+          "readOnly": true,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SubResourceWithColocationStatus"
+          },
+          "description": "A list of references to all virtual machine scale sets in the proximity placement group."
+        },
+        "availabilitySets": {
+          "readOnly": true,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SubResourceWithColocationStatus"
+          },
+          "description": "A list of references to all availability sets in the proximity placement group."
+        },
+        "colocationStatus": {
+          "$ref": "#/definitions/InstanceViewStatus",
+          "description": "Describes colocation status of the Proximity Placement Group."
+        }
+      },
+      "description": "Describes the properties of a Proximity Placement Group."
+    },
+    "ProximityPlacementGroup": {
+      "properties": {
+        "properties": {
+          "x-ms-client-flatten": true,
+          "$ref": "#/definitions/ProximityPlacementGroupProperties",
+          "description": "Describes the properties of a Proximity Placement Group."
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/Resource"
+        }
+      ],
+      "description": "Specifies information about the proximity placement group."
+    },
+    "ProximityPlacementGroupUpdate": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/UpdateResource"
+        }
+      ],
+      "description": "Specifies information about the proximity placement group."
+    },
+    "ProximityPlacementGroupListResult": {
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProximityPlacementGroup"
+          },
+          "description": "The list of proximity placement groups"
+        },
+        "nextLink": {
+          "type": "string",
+          "description": "The URI to fetch the next page of proximity placement groups."
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "description": "The List Proximity Placement Group operation response."
+    },
+    "DedicatedHostGroupInstanceView": {
+      "properties": {
+        "hosts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DedicatedHostInstanceViewWithName"
+          },
+          "description": "List of instance view of the dedicated hosts under the dedicated host group."
+        }
+      }
+    },
+    "DedicatedHostGroupProperties": {
+      "properties": {
+        "platformFaultDomainCount": {
+          "type": "integer",
+          "format": "int32",
+          "minimum": 1,
+          "description": "Number of fault domains that the host group can span."
+        },
+        "hosts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SubResourceReadOnly"
+          },
+          "readOnly": true,
+          "description": "A list of references to all dedicated hosts in the dedicated host group."
+        },
+        "instanceView": {
+          "$ref": "#/definitions/DedicatedHostGroupInstanceView",
+          "readOnly": true,
+          "description": "The dedicated host group instance view, which has the list of instance view of the dedicated hosts under the dedicated host group."
+        },
+        "supportAutomaticPlacement": {
+          "type": "boolean",
+          "description": "Specifies whether virtual machines or virtual machine scale sets can be placed automatically on the dedicated host group. Automatic placement means resources are allocated on dedicated hosts, that are chosen by Azure, under the dedicated host group. The value is defaulted to 'false' when not provided. <br><br>Minimum api-version: 2020-06-01."
+        }
+      },
+      "required": [
+        "platformFaultDomainCount"
+      ],
+      "description": "Dedicated Host Group Properties."
+    },
+    "DedicatedHostGroup": {
+      "properties": {
+        "properties": {
+          "x-ms-client-flatten": true,
+          "$ref": "#/definitions/DedicatedHostGroupProperties"
+        },
+        "zones": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Availability Zone to use for this host group. Only single zone is supported. The zone can be assigned only during creation. If not provided, the group supports all zones in the region. If provided, enforces each host in the group to be in the same zone."
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/Resource"
+        }
+      ],
+      "description": "Specifies information about the dedicated host group that the dedicated hosts should be assigned to. <br><br> Currently, a dedicated host can only be added to a dedicated host group at creation time. An existing dedicated host cannot be added to another dedicated host group."
+    },
+    "DedicatedHostGroupUpdate": {
+      "properties": {
+        "properties": {
+          "x-ms-client-flatten": true,
+          "$ref": "#/definitions/DedicatedHostGroupProperties"
+        },
+        "zones": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Availability Zone to use for this host group. Only single zone is supported. The zone can be assigned only during creation. If not provided, the group supports all zones in the region. If provided, enforces each host in the group to be in the same zone."
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/UpdateResource"
+        }
+      ],
+      "description": "Specifies information about the dedicated host group that the dedicated host should be assigned to. Only tags may be updated."
+    },
+    "DedicatedHostGroupListResult": {
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DedicatedHostGroup"
+          },
+          "description": "The list of dedicated host groups"
+        },
+        "nextLink": {
+          "type": "string",
+          "description": "The URI to fetch the next page of Dedicated Host Groups. Call ListNext() with this URI to fetch the next page of Dedicated Host Groups."
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "description": "The List Dedicated Host Group with resource group response."
+    },
+    "DedicatedHostLicenseType": {
+      "type": "string",
+      "description": "Specifies the software license type that will be applied to the VMs deployed on the dedicated host. <br><br> Possible values are: <br><br> **None** <br><br> **Windows_Server_Hybrid** <br><br> **Windows_Server_Perpetual** <br><br> Default: **None**",
+      "enum": [
+        "None",
+        "Windows_Server_Hybrid",
+        "Windows_Server_Perpetual"
+      ],
+      "x-ms-enum": {
+        "name": "DedicatedHostLicenseTypes",
+        "modelAsString": false
+      }
+    },
+    "DedicatedHostAllocatableVM": {
+      "properties": {
+        "vmSize": {
+          "type": "string",
+          "description": "VM size in terms of which the unutilized capacity is represented."
+        },
+        "count": {
+          "type": "number",
+          "format": "double",
+          "description": "Maximum number of VMs of size vmSize that can fit in the dedicated host's remaining capacity."
+        }
+      },
+      "description": "Represents the dedicated host unutilized capacity in terms of a specific VM size."
+    },
+    "DedicatedHostAvailableCapacity": {
+      "properties": {
+        "allocatableVMs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DedicatedHostAllocatableVM"
+          },
+          "description": "The unutilized capacity of the dedicated host represented in terms of each VM size that is allowed to be deployed to the dedicated host."
+        }
+      },
+      "description": "Dedicated host unutilized capacity."
+    },
+    "DedicatedHostInstanceView": {
+      "properties": {
+        "assetId": {
+          "readOnly": true,
+          "type": "string",
+          "description": "Specifies the unique id of the dedicated physical machine on which the dedicated host resides."
+        },
+        "availableCapacity": {
+          "$ref": "#/definitions/DedicatedHostAvailableCapacity",
+          "description": "Unutilized capacity of the dedicated host."
+        },
+        "statuses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/InstanceViewStatus"
+          },
+          "description": "The resource status information."
+        }
+      },
+      "description": "The instance view of a dedicated host."
+    },
+    "DedicatedHostInstanceViewWithName": {
+      "properties": {
+        "name": {
+          "type": "string",
+          "readOnly": true,
+          "description": "The name of the dedicated host."
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/DedicatedHostInstanceView"
+        }
+      ],
+      "description": "The instance view of a dedicated host that includes the name of the dedicated host. It is used for the response to the instance view of a dedicated host group."
+    },
+    "DedicatedHostProperties": {
+      "properties": {
+        "platformFaultDomain": {
+          "type": "integer",
+          "format": "int32",
+          "minimum": 0,
+          "description": "Fault domain of the dedicated host within a dedicated host group."
+        },
+        "autoReplaceOnFailure": {
+          "type": "boolean",
+          "description": "Specifies whether the dedicated host should be replaced automatically in case of a failure. The value is defaulted to 'true' when not provided."
+        },
+        "hostId": {
+          "readOnly": true,
+          "type": "string",
+          "description": "A unique id generated and assigned to the dedicated host by the platform. <br><br> Does not change throughout the lifetime of the host."
+        },
+        "virtualMachines": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SubResourceReadOnly"
+          },
+          "readOnly": true,
+          "description": "A list of references to all virtual machines in the Dedicated Host."
+        },
+        "licenseType": {
+          "$ref": "#/definitions/DedicatedHostLicenseType",
+          "description": "Specifies the software license type that will be applied to the VMs deployed on the dedicated host. <br><br> Possible values are: <br><br> **None** <br><br> **Windows_Server_Hybrid** <br><br> **Windows_Server_Perpetual** <br><br> Default: **None**"
+        },
+        "provisioningTime": {
+          "readOnly": true,
+          "type": "string",
+          "format": "date-time",
+          "description": "The date when the host was first provisioned."
+        },
+        "provisioningState": {
+          "readOnly": true,
+          "type": "string",
+          "description": "The provisioning state, which only appears in the response."
+        },
+        "instanceView": {
+          "$ref": "#/definitions/DedicatedHostInstanceView",
+          "readOnly": true,
+          "description": "The dedicated host instance view."
+        }
+      },
+      "description": "Properties of the dedicated host."
+    },
+    "DedicatedHost": {
+      "properties": {
+        "properties": {
+          "x-ms-client-flatten": true,
+          "$ref": "#/definitions/DedicatedHostProperties"
+        },
+        "sku": {
+          "$ref": "#/definitions/Sku",
+          "description": "SKU of the dedicated host for Hardware Generation and VM family. Only name is required to be set. List Microsoft.Compute SKUs for a list of possible values."
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/Resource"
+        }
+      ],
+      "required": [
+        "sku"
+      ],
+      "description": "Specifies information about the Dedicated host."
+    },
+    "DedicatedHostUpdate": {
+      "properties": {
+        "properties": {
+          "x-ms-client-flatten": true,
+          "$ref": "#/definitions/DedicatedHostProperties"
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/UpdateResource"
+        }
+      ],
+      "description": "Specifies information about the dedicated host. Only tags, autoReplaceOnFailure and licenseType may be updated."
+    },
+    "DedicatedHostListResult": {
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DedicatedHost"
+          },
+          "description": "The list of dedicated hosts"
+        },
+        "nextLink": {
+          "type": "string",
+          "description": "The URI to fetch the next page of dedicated hosts. Call ListNext() with this URI to fetch the next page of dedicated hosts."
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "description": "The list dedicated host operation response."
+    },
+    "SshPublicKeyGenerateKeyPairResult": {
+      "properties": {
+        "privateKey": {
+          "type": "string",
+          "description": "Private key portion of the key pair used to authenticate to a virtual machine through ssh. The private key is returned in RFC3447 format and should be treated as a secret."
+        },
+        "publicKey": {
+          "type": "string",
+          "description": "Public key portion of the key pair used to authenticate to a virtual machine through ssh. The public key is in ssh-rsa format."
+        },
+        "id": {
+          "type": "string",
+          "description": "The ARM resource id in the form of /subscriptions/{SubscriptionId}/resourceGroups/{ResourceGroupName}/providers/Microsoft.Compute/sshPublicKeys/{SshPublicKeyName}"
+        }
+      },
+      "required": [
+        "privateKey",
+        "publicKey",
+        "id"
+      ],
+      "description": "Response from generation of an SSH key pair."
+    },
+    "SshPublicKeyResourceProperties": {
+      "properties": {
+        "publicKey": {
+          "type": "string",
+          "description": "SSH public key used to authenticate to a virtual machine through ssh. If this property is not initially provided when the resource is created, the publicKey property will be populated when generateKeyPair is called. If the public key is provided upon resource creation, the provided public key needs to be at least 2048-bit and in ssh-rsa format."
+        }
+      },
+      "description": "Properties of the SSH public key."
+    },
+    "SshPublicKeyResource": {
+      "properties": {
+        "properties": {
+          "x-ms-client-flatten": true,
+          "$ref": "#/definitions/SshPublicKeyResourceProperties",
+          "description": "Properties of the SSH public key."
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/Resource"
+        }
+      ],
+      "description": "Specifies information about the SSH public key."
+    },
+    "SshPublicKeyUpdateResource": {
+      "properties": {
+        "properties": {
+          "x-ms-client-flatten": true,
+          "$ref": "#/definitions/SshPublicKeyResourceProperties",
+          "description": "Properties of the SSH public key."
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/UpdateResource"
+        }
+      ],
+      "description": "Specifies information about the SSH public key."
+    },
+    "SshPublicKeysGroupListResult": {
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SshPublicKeyResource"
+          },
+          "description": "The list of SSH public keys"
+        },
+        "nextLink": {
+          "type": "string",
+          "description": "The URI to fetch the next page of SSH public keys. Call ListNext() with this URI to fetch the next page of SSH public keys."
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "description": "The list SSH public keys operation response."
+    },
+    "VirtualMachineSize": {
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the virtual machine size."
+        },
+        "numberOfCores": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The number of cores supported by the virtual machine size."
+        },
+        "osDiskSizeInMB": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The OS disk size, in MB, allowed by the virtual machine size."
+        },
+        "resourceDiskSizeInMB": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The resource disk size, in MB, allowed by the virtual machine size."
+        },
+        "memoryInMB": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The amount of memory, in MB, supported by the virtual machine size."
+        },
+        "maxDataDiskCount": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The maximum number of data disks that can be attached to the virtual machine size."
+        }
+      },
+      "description": "Describes the properties of a VM size."
+    },
+    "VirtualMachineSizeListResult": {
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VirtualMachineSize"
+          },
+          "description": "The list of virtual machine sizes."
+        }
+      },
+      "description": "The List Virtual Machine operation response."
+    },
+    "VirtualMachineExtensionImageProperties": {
+      "properties": {
+        "operatingSystem": {
+          "type": "string",
+          "description": "The operating system this extension supports."
+        },
+        "computeRole": {
+          "type": "string",
+          "description": "The type of role (IaaS or PaaS) this extension supports."
+        },
+        "handlerSchema": {
+          "type": "string",
+          "description": "The schema defined by publisher, where extension consumers should provide settings in a matching schema."
+        },
+        "vmScaleSetEnabled": {
+          "type": "boolean",
+          "description": "Whether the extension can be used on xRP VMScaleSets. By default existing extensions are usable on scalesets, but there might be cases where a publisher wants to explicitly indicate the extension is only enabled for CRP VMs but not VMSS."
+        },
+        "supportsMultipleExtensions": {
+          "type": "boolean",
+          "description": "Whether the handler can support multiple extensions."
+        }
+      },
+      "required": [
+        "operatingSystem",
+        "computeRole",
+        "handlerSchema"
+      ],
+      "description": "Describes the properties of a Virtual Machine Extension Image."
+    },
+    "VirtualMachineExtensionImage": {
+      "properties": {
+        "properties": {
+          "x-ms-client-flatten": true,
+          "$ref": "#/definitions/VirtualMachineExtensionImageProperties"
+        }
+      },
+      "required": [
+        "name",
+        "location"
+      ],
+      "allOf": [
+        {
+          "$ref": "#/definitions/Resource"
+        }
+      ],
+      "description": "Describes a Virtual Machine Extension Image."
+    },
+    "VirtualMachineImageResource": {
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the resource."
+        },
+        "location": {
+          "type": "string",
+          "description": "The supported Azure location of the resource."
+        },
+        "tags": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Specifies the tags that are assigned to the virtual machine. For more information about using tags, see [Using tags to organize your Azure resources](https://docs.microsoft.com/azure/azure-resource-manager/resource-group-using-tags.md)."
+        },
+        "extendedLocation": {
+          "$ref": "#/definitions/ExtendedLocation",
+          "description": "The extended location of the Virtual Machine."
+        }
+      },
+      "required": [
+        "name",
+        "location"
+      ],
+      "allOf": [
+        {
+          "$ref": "#/definitions/SubResource"
+        }
+      ],
+      "description": "Virtual machine image resource information."
+    },
+    "VirtualMachineExtensionInstanceView": {
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The virtual machine extension name."
+        },
+        "type": {
+          "type": "string",
+          "description": "Specifies the type of the extension; an example is \"CustomScriptExtension\"."
+        },
+        "typeHandlerVersion": {
+          "type": "string",
+          "description": "Specifies the version of the script handler."
+        },
+        "substatuses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/InstanceViewStatus"
+          },
+          "description": "The resource status information."
+        },
+        "statuses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/InstanceViewStatus"
+          },
+          "description": "The resource status information."
+        }
+      },
+      "description": "The instance view of a virtual machine extension."
+    },
+    "VirtualMachineExtensionProperties": {
+      "properties": {
+        "forceUpdateTag": {
+          "type": "string",
+          "description": "How the extension handler should be forced to update even if the extension configuration has not changed."
+        },
+        "publisher": {
+          "type": "string",
+          "description": "The name of the extension handler publisher."
+        },
+        "type": {
+          "type": "string",
+          "description": "Specifies the type of the extension; an example is \"CustomScriptExtension\"."
+        },
+        "typeHandlerVersion": {
+          "type": "string",
+          "description": "Specifies the version of the script handler."
+        },
+        "autoUpgradeMinorVersion": {
+          "type": "boolean",
+          "description": "Indicates whether the extension should use a newer minor version if one is available at deployment time. Once deployed, however, the extension will not upgrade minor versions unless redeployed, even with this property set to true."
+        },
+        "enableAutomaticUpgrade": {
+          "type": "boolean",
+          "description": "Indicates whether the extension should be automatically upgraded by the platform if there is a newer version of the extension available."
+        },
+        "settings": {
+          "type": "object",
+          "description": "Json formatted public settings for the extension."
+        },
+        "protectedSettings": {
+          "type": "object",
+          "description": "The extension can contain either protectedSettings or protectedSettingsFromKeyVault or no protected settings at all."
+        },
+        "provisioningState": {
+          "readOnly": true,
+          "type": "string",
+          "description": "The provisioning state, which only appears in the response."
+        },
+        "instanceView": {
+          "$ref": "#/definitions/VirtualMachineExtensionInstanceView",
+          "description": "The virtual machine extension instance view."
+        }
+      },
+      "description": "Describes the properties of a Virtual Machine Extension."
+    },
+    "VirtualMachineExtensionUpdateProperties": {
+      "properties": {
+        "forceUpdateTag": {
+          "type": "string",
+          "description": "How the extension handler should be forced to update even if the extension configuration has not changed."
+        },
+        "publisher": {
+          "type": "string",
+          "description": "The name of the extension handler publisher."
+        },
+        "type": {
+          "type": "string",
+          "description": "Specifies the type of the extension; an example is \"CustomScriptExtension\"."
+        },
+        "typeHandlerVersion": {
+          "type": "string",
+          "description": "Specifies the version of the script handler."
+        },
+        "autoUpgradeMinorVersion": {
+          "type": "boolean",
+          "description": "Indicates whether the extension should use a newer minor version if one is available at deployment time. Once deployed, however, the extension will not upgrade minor versions unless redeployed, even with this property set to true."
+        },
+        "enableAutomaticUpgrade": {
+          "type": "boolean",
+          "description": "Indicates whether the extension should be automatically upgraded by the platform if there is a newer version of the extension available."
+        },
+        "settings": {
+          "type": "object",
+          "description": "Json formatted public settings for the extension."
+        },
+        "protectedSettings": {
+          "type": "object",
+          "description": "The extension can contain either protectedSettings or protectedSettingsFromKeyVault or no protected settings at all."
+        }
+      },
+      "description": "Describes the properties of a Virtual Machine Extension."
+    },
+    "VirtualMachineExtension": {
+      "properties": {
+        "properties": {
+          "x-ms-client-flatten": true,
+          "$ref": "#/definitions/VirtualMachineExtensionProperties"
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/Resource"
+        }
+      ],
+      "description": "Describes a Virtual Machine Extension."
+    },
+    "VirtualMachineScaleSetVMExtension": {
+      "properties": {
+        "name": {
+          "readOnly": true,
+          "type": "string",
+          "description": "The name of the extension."
+        },
+        "type": {
+          "readOnly": true,
+          "type": "string",
+          "description": "Resource type"
+        },
+        "properties": {
+          "x-ms-client-flatten": true,
+          "$ref": "#/definitions/VirtualMachineExtensionProperties"
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/SubResourceReadOnly"
+        }
+      ],
+      "description": "Describes a VMSS VM Extension."
+    },
+    "VirtualMachineExtensionUpdate": {
+      "properties": {
+        "properties": {
+          "x-ms-client-flatten": true,
+          "$ref": "#/definitions/VirtualMachineExtensionUpdateProperties"
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/UpdateResource"
+        }
+      ],
+      "description": "Describes a Virtual Machine Extension."
+    },
+    "VirtualMachineScaleSetVMExtensionUpdate": {
+      "properties": {
+        "name": {
+          "readOnly": true,
+          "type": "string",
+          "description": "The name of the extension."
+        },
+        "type": {
+          "readOnly": true,
+          "type": "string",
+          "description": "Resource type"
+        },
+        "properties": {
+          "x-ms-client-flatten": true,
+          "$ref": "#/definitions/VirtualMachineExtensionUpdateProperties"
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/SubResourceReadOnly"
+        }
+      ],
+      "description": "Describes a VMSS VM Extension."
+    },
+    "VirtualMachineExtensionsListResult": {
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VirtualMachineExtension"
+          },
+          "description": "The list of extensions"
+        }
+      },
+      "description": "The List Extension operation response"
+    },
+    "VirtualMachineScaleSetVMExtensionsListResult": {
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VirtualMachineScaleSetVMExtension"
+          },
+          "description": "The list of VMSS VM extensions"
+        }
+      },
+      "description": "The List VMSS VM Extension operation response"
+    },
+    "VirtualMachineSoftwarePatchProperties": {
+      "properties": {
+        "patchId": {
+          "type": "string",
+          "readOnly": true,
+          "description": "A unique identifier for the patch."
+        },
+        "name": {
+          "type": "string",
+          "readOnly": true,
+          "description": "The friendly name of the patch."
+        },
+        "version": {
+          "type": "string",
+          "readOnly": true,
+          "description": "The version number of the patch. This property applies only to Linux patches."
+        },
+        "kbId": {
+          "type": "string",
+          "readOnly": true,
+          "description": "The KBID of the patch. Only applies to Windows patches."
+        },
+        "classifications": {
+          "type": "array",
+          "readOnly": true,
+          "items": {
+            "type": "string"
+          },
+          "description": "The classification(s) of the patch as provided by the patch publisher."
+        },
+        "rebootBehavior": {
+          "type": "string",
+          "readOnly": true,
+          "description": "Describes the reboot requirements of the patch.",
+          "enum": [
+            "Unknown",
+            "NeverReboots",
+            "AlwaysRequiresReboot",
+            "CanRequestReboot"
+          ],
+          "x-ms-enum": {
+            "name": "VMGuestPatchRebootBehavior",
+            "modelAsString": true
+          }
+        },
+        "activityId": {
+          "type": "string",
+          "readOnly": true,
+          "description": "The activity ID of the operation that produced this result. It is used to correlate across CRP and extension logs."
+        },
+        "publishedDate": {
+          "type": "string",
+          "readOnly": true,
+          "format": "date-time",
+          "description": "The UTC timestamp when the repository published this patch."
+        },
+        "lastModifiedDateTime": {
+          "type": "string",
+          "readOnly": true,
+          "format": "date-time",
+          "description": "The UTC timestamp of the last update to this patch record."
+        },
+        "assessmentState": {
+          "type": "string",
+          "readOnly": true,
+          "description": "Describes the availability of a given patch.",
+          "enum": [
+            "Unknown",
+            "Available"
+          ],
+          "x-ms-enum": {
+            "name": "PatchAssessmentState",
+            "modelAsString": true
+          }
+        }
+      },
+      "description": "Describes the properties of a Virtual Machine software patch."
+    },
+    "VirtualMachineAssessPatchesResult": {
+      "properties": {
+        "status": {
+          "type": "string",
+          "readOnly": true,
+          "description": "The overall success or failure status of the operation. It remains \"InProgress\" until the operation completes. At that point it will become \"Unknown\", \"Failed\", \"Succeeded\", or \"CompletedWithWarnings.\"",
+          "enum": [
+            "Unknown",
+            "InProgress",
+            "Failed",
+            "Succeeded",
+            "CompletedWithWarnings"
+          ],
+          "x-ms-enum": {
+            "name": "PatchOperationStatus",
+            "modelAsString": true
+          }
+        },
+        "assessmentActivityId": {
+          "type": "string",
+          "readOnly": true,
+          "description": "The activity ID of the operation that produced this result. It is used to correlate across CRP and extension logs."
+        },
+        "rebootPending": {
+          "type": "boolean",
+          "readOnly": true,
+          "description": "The overall reboot status of the VM. It will be true when partially installed patches require a reboot to complete installation but the reboot has not yet occurred."
+        },
+        "criticalAndSecurityPatchCount": {
+          "type": "integer",
+          "readOnly": true,
+          "format": "int32",
+          "description": "The number of critical or security patches that have been detected as available and not yet installed."
+        },
+        "otherPatchCount": {
+          "type": "integer",
+          "readOnly": true,
+          "format": "int32",
+          "description": "The number of all available patches excluding critical and security."
+        },
+        "startDateTime": {
+          "type": "string",
+          "readOnly": true,
+          "format": "date-time",
+          "description": "The UTC timestamp when the operation began."
+        },
+        "availablePatches": {
+          "type": "array",
+          "readOnly": true,
+          "items": {
+            "x-ms-client-flatten": true,
+            "$ref": "#/definitions/VirtualMachineSoftwarePatchProperties"
+          },
+          "description": "The list of patches that have been detected as available for installation."
+        },
+        "error": {
+          "$ref": "#/definitions/ApiError",
+          "readOnly": true,
+          "description": "The errors that were encountered during execution of the operation. The details array contains the list of them."
+        }
+      },
+      "description": "Describes the properties of an AssessPatches result."
+    },
+    "VirtualMachineInstallPatchesParameters": {
+      "properties": {
+        "maximumDuration": {
+          "type": "string",
+          "description": "Specifies the maximum amount of time that the operation will run. It must be an ISO 8601-compliant duration string such as PT4H (4 hours)"
+        },
+        "rebootSetting": {
+          "type": "string",
+          "description": "Defines when it is acceptable to reboot a VM during a software update operation.",
+          "enum": [
+            "IfRequired",
+            "Never",
+            "Always"
+          ],
+          "x-ms-enum": {
+            "name": "VMGuestPatchRebootSetting",
+            "modelAsString": true
+          }
+        },
+        "windowsParameters": {
+          "$ref": "#/definitions/WindowsParameters",
+          "description": "Input for InstallPatches on a Windows VM, as directly received by the API"
+        },
+        "linuxParameters": {
+          "$ref": "#/definitions/LinuxParameters",
+          "description": "Input for InstallPatches on a Linux VM, as directly received by the API"
+        }
+      },
+      "required": [
+        "maximumDuration",
+        "rebootSetting"
+      ],
+      "description": "Input for InstallPatches as directly received by the API"
+    },
+    "WindowsParameters": {
+      "properties": {
+        "classificationsToInclude": {
+          "type": "array",
+          "description": "The update classifications to select when installing patches for Windows.",
+          "items": {
+            "type": "string",
+            "enum": [
+              "Critical",
+              "Security",
+              "UpdateRollUp",
+              "FeaturePack",
+              "ServicePack",
+              "Definition",
+              "Tools",
+              "Updates"
+            ],
+            "x-ms-enum": {
+              "name": "VMGuestPatchClassification_Windows",
+              "modelAsString": true
+            }
+          }
+        },
+        "kbNumbersToInclude": {
+          "type": "array",
+          "description": "Kbs to include in the patch operation",
+          "items": {
+            "type": "string"
+          }
+        },
+        "kbNumbersToExclude": {
+          "type": "array",
+          "description": "Kbs to exclude in the patch operation",
+          "items": {
+            "type": "string"
+          }
+        },
+        "excludeKbsRequiringReboot": {
+          "type": "boolean",
+          "description": "Filters out Kbs that don't have an InstallationRebootBehavior of 'NeverReboots' when this is set to true."
+        },
+        "maxPatchPublishDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "This is used to install patches that were published on or before this given max published date."
+        }
+      },
+      "description": "Input for InstallPatches on a Windows VM, as directly received by the API"
+    },
+    "LinuxParameters": {
+      "properties": {
+        "classificationsToInclude": {
+          "type": "array",
+          "description": "The update classifications to select when installing patches for Linux.",
+          "items": {
+            "type": "string",
+            "enum": [
+              "Critical",
+              "Security",
+              "Other"
+            ],
+            "x-ms-enum": {
+              "name": "VMGuestPatchClassification_Linux",
+              "modelAsString": true
+            }
+          }
+        },
+        "packageNameMasksToInclude": {
+          "type": "array",
+          "description": "packages to include in the patch operation. Format: packageName_packageVersion",
+          "items": {
+            "type": "string"
+          }
+        },
+        "packageNameMasksToExclude": {
+          "type": "array",
+          "description": "packages to exclude in the patch operation. Format: packageName_packageVersion",
+          "items": {
+            "type": "string"
+          }
+        },
+        "maintenanceRunId": {
+          "type": "string",
+          "description": "This is used as a maintenance run identifier for Auto VM Guest Patching in Linux."
+        }
+      },
+      "description": "Input for InstallPatches on a Linux VM, as directly received by the API"
+    },
+    "VirtualMachineInstallPatchesResult": {
+      "properties": {
+        "status": {
+          "type": "string",
+          "readOnly": true,
+          "description": "The overall success or failure status of the operation. It remains \"InProgress\" until the operation completes. At that point it will become \"Failed\", \"Succeeded\", \"Unknown\" or \"CompletedWithWarnings.\"",
+          "enum": [
+            "Unknown",
+            "InProgress",
+            "Failed",
+            "Succeeded",
+            "CompletedWithWarnings"
+          ],
+          "x-ms-enum": {
+            "name": "PatchOperationStatus",
+            "modelAsString": true
+          }
+        },
+        "installationActivityId": {
+          "type": "string",
+          "readOnly": true,
+          "description": "The activity ID of the operation that produced this result. It is used to correlate across CRP and extension logs."
+        },
+        "rebootStatus": {
+          "type": "string",
+          "readOnly": true,
+          "description": "The reboot state of the VM following completion of the operation.",
+          "enum": [
+            "Unknown",
+            "NotNeeded",
+            "Required",
+            "Started",
+            "Failed",
+            "Completed"
+          ],
+          "x-ms-enum": {
+            "name": "VMGuestPatchRebootStatus",
+            "modelAsString": true
+          }
+        },
+        "maintenanceWindowExceeded": {
+          "type": "boolean",
+          "readOnly": true,
+          "description": "Whether the operation ran out of time before it completed all its intended actions."
+        },
+        "excludedPatchCount": {
+          "type": "integer",
+          "readOnly": true,
+          "format": "int32",
+          "description": "The number of patches that were not installed due to the user blocking their installation."
+        },
+        "notSelectedPatchCount": {
+          "type": "integer",
+          "readOnly": true,
+          "format": "int32",
+          "description": "The number of patches that were detected as available for install, but did not meet the operation's criteria."
+        },
+        "pendingPatchCount": {
+          "type": "integer",
+          "readOnly": true,
+          "format": "int32",
+          "description": "The number of patches that were identified as meeting the installation criteria, but were not able to be installed. Typically this happens when maintenanceWindowExceeded == true."
+        },
+        "installedPatchCount": {
+          "type": "integer",
+          "readOnly": true,
+          "format": "int32",
+          "description": "The number of patches successfully installed."
+        },
+        "failedPatchCount": {
+          "type": "integer",
+          "readOnly": true,
+          "format": "int32",
+          "description": "The number of patches that could not be installed due to some issue. See errors for details."
+        },
+        "patches": {
+          "type": "array",
+          "readOnly": true,
+          "items": {
+            "x-ms-client-flatten": true,
+            "$ref": "#/definitions/PatchInstallationDetail"
+          },
+          "description": "The patches that were installed during the operation."
+        },
+        "startDateTime": {
+          "type": "string",
+          "readOnly": true,
+          "format": "date-time",
+          "description": "The UTC timestamp when the operation began."
+        },
+        "error": {
+          "$ref": "#/definitions/ApiError",
+          "readOnly": true,
+          "description": "The errors that were encountered during execution of the operation. The details array contains the list of them."
+        }
+      },
+      "description": "The result summary of an installation operation."
+    },
+    "PatchInstallationDetail": {
+      "properties": {
+        "patchId": {
+          "type": "string",
+          "readOnly": true,
+          "description": "A unique identifier for the patch."
+        },
+        "name": {
+          "type": "string",
+          "readOnly": true,
+          "description": "The friendly name of the patch."
+        },
+        "version": {
+          "type": "string",
+          "readOnly": true,
+          "description": "The version string of the package. It may conform to Semantic Versioning. Only applies to Linux."
+        },
+        "kbId": {
+          "type": "string",
+          "readOnly": true,
+          "description": "The KBID of the patch. Only applies to Windows patches."
+        },
+        "classifications": {
+          "type": "array",
+          "readOnly": true,
+          "items": {
+            "type": "string"
+          },
+          "description": "The classification(s) of the patch as provided by the patch publisher."
+        },
+        "installationState": {
+          "type": "string",
+          "readOnly": true,
+          "description": "The state of the patch after the installation operation completed.",
+          "enum": [
+            "Unknown",
+            "Installed",
+            "Failed",
+            "Excluded",
+            "NotSelected",
+            "Pending"
+          ],
+          "x-ms-enum": {
+            "name": "PatchInstallationState",
+            "modelAsString": true
+          }
+        }
+      },
+      "description": "Information about a specific patch that was encountered during an installation action."
+    },
+    "PurchasePlan": {
+      "properties": {
+        "publisher": {
+          "type": "string",
+          "description": "The publisher ID."
+        },
+        "name": {
+          "type": "string",
+          "description": "The plan ID."
+        },
+        "product": {
+          "type": "string",
+          "description": "Specifies the product of the image from the marketplace. This is the same value as Offer under the imageReference element."
+        }
+      },
+      "required": [
+        "publisher",
+        "name",
+        "product"
+      ],
+      "description": "Used for establishing the purchase context of any 3rd Party artifact through MarketPlace."
+    },
+    "OSDiskImage": {
+      "properties": {
+        "operatingSystem": {
+          "type": "string",
+          "description": "The operating system of the osDiskImage.",
+          "enum": [
+            "Windows",
+            "Linux"
+          ],
+          "x-ms-enum": {
+            "name": "OperatingSystemTypes",
+            "modelAsString": false
+          }
+        }
+      },
+      "required": [
+        "operatingSystem"
+      ],
+      "description": "Contains the os disk image information."
+    },
+    "DataDiskImage": {
+      "properties": {
+        "lun": {
+          "readOnly": true,
+          "type": "integer",
+          "format": "int32",
+          "description": "Specifies the logical unit number of the data disk. This value is used to identify data disks within the VM and therefore must be unique for each data disk attached to a VM."
+        }
+      },
+      "description": "Contains the data disk images information."
+    },
+    "AutomaticOSUpgradeProperties": {
+      "properties": {
+        "automaticOSUpgradeSupported": {
+          "type": "boolean",
+          "description": "Specifies whether automatic OS upgrade is supported on the image."
+        }
+      },
+      "required": [
+        "automaticOSUpgradeSupported"
+      ],
+      "description": "Describes automatic OS upgrade properties on the image."
+    },
+    "VirtualMachineImageFeature": {
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the feature."
+        },
+        "value": {
+          "type": "string",
+          "description": "The corresponding value for the feature."
+        }
+      },
+      "description": "Specifies additional capabilities supported by the image"
+    },
+    "VirtualMachineImageProperties": {
+      "properties": {
+        "plan": {
+          "$ref": "#/definitions/PurchasePlan"
+        },
+        "osDiskImage": {
+          "$ref": "#/definitions/OSDiskImage"
+        },
+        "dataDiskImages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DataDiskImage"
+          }
+        },
+        "automaticOSUpgradeProperties": {
+          "$ref": "#/definitions/AutomaticOSUpgradeProperties"
+        },
+        "hyperVGeneration": {
+          "$ref": "#/definitions/HyperVGenerationType"
+        },
+        "disallowed": {
+          "$ref": "#/definitions/DisallowedConfiguration",
+          "description": "Specifies disallowed configuration for the VirtualMachine created from the image"
+        },
+        "features": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VirtualMachineImageFeature"
+          }
+        }
+      },
+      "description": "Describes the properties of a Virtual Machine Image."
+    },
+    "VirtualMachineImage": {
+      "properties": {
+        "properties": {
+          "x-ms-client-flatten": true,
+          "$ref": "#/definitions/VirtualMachineImageProperties"
+        }
+      },
+      "required": [
+        "name",
+        "location"
+      ],
+      "allOf": [
+        {
+          "$ref": "#/definitions/VirtualMachineImageResource"
+        }
+      ],
+      "description": "Describes a Virtual Machine Image."
+    },
+    "UsageName": {
+      "properties": {
+        "value": {
+          "type": "string",
+          "description": "The name of the resource."
+        },
+        "localizedValue": {
+          "type": "string",
+          "description": "The localized name of the resource."
+        }
+      },
+      "description": "The Usage Names."
+    },
+    "Usage": {
+      "properties": {
+        "unit": {
+          "type": "string",
+          "description": "An enum describing the unit of usage measurement.",
+          "enum": [
+            "Count"
+          ],
+          "x-ms-enum": {
+            "name": "UsageUnit",
+            "modelAsString": false
+          }
+        },
+        "currentValue": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The current usage of the resource."
+        },
+        "limit": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The maximum permitted usage of the resource."
+        },
+        "name": {
+          "$ref": "#/definitions/UsageName",
+          "description": "The name of the type of usage."
+        }
+      },
+      "required": [
+        "unit",
+        "currentValue",
+        "limit",
+        "name"
+      ],
+      "description": "Describes Compute Resource Usage."
+    },
+    "ListUsagesResult": {
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Usage"
+          },
+          "description": "The list of compute resource usages."
+        },
+        "nextLink": {
+          "type": "string",
+          "description": "The URI to fetch the next page of compute resource usage information. Call ListNext() with this to fetch the next page of compute resource usage information."
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "description": "The List Usages operation response."
+    },
+    "VirtualMachineReimageParameters": {
+      "properties": {
+        "tempDisk": {
+          "type": "boolean",
+          "description": "Specifies whether to reimage temp disk. Default value: false. Note: This temp disk reimage parameter is only supported for VM/VMSS with Ephemeral OS disk."
+        }
+      },
+      "description": "Parameters for Reimaging Virtual Machine. NOTE: Virtual Machine OS disk will always be reimaged"
+    },
+    "VirtualMachineCaptureParameters": {
+      "properties": {
+        "vhdPrefix": {
+          "type": "string",
+          "description": "The captured virtual hard disk's name prefix."
+        },
+        "destinationContainerName": {
+          "type": "string",
+          "description": "The destination container name."
+        },
+        "overwriteVhds": {
+          "type": "boolean",
+          "description": "Specifies whether to overwrite the destination virtual hard disk, in case of conflict."
+        }
+      },
+      "required": [
+        "vhdPrefix",
+        "destinationContainerName",
+        "overwriteVhds"
+      ],
+      "description": "Capture Virtual Machine parameters."
+    },
+    "VirtualMachineCaptureResult": {
+      "properties": {
+        "$schema": {
+          "readOnly": true,
+          "type": "string",
+          "description": "the schema of the captured virtual machine"
+        },
+        "contentVersion": {
+          "readOnly": true,
+          "type": "string",
+          "description": "the version of the content"
+        },
+        "parameters": {
+          "readOnly": true,
+          "type": "object",
+          "description": "parameters of the captured virtual machine"
+        },
+        "resources": {
+          "readOnly": true,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "description": "resource item"
+          },
+          "description": "a list of resource items of the captured virtual machine"
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/SubResource"
+        }
+      ],
+      "description": "Output of virtual machine capture operation."
+    },
+    "Plan": {
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The plan ID."
+        },
+        "publisher": {
+          "type": "string",
+          "description": "The publisher ID."
+        },
+        "product": {
+          "type": "string",
+          "description": "Specifies the product of the image from the marketplace. This is the same value as Offer under the imageReference element."
+        },
+        "promotionCode": {
+          "type": "string",
+          "description": "The promotion code."
+        }
+      },
+      "description": "Specifies information about the marketplace image used to create the virtual machine. This element is only used for marketplace images. Before you can use a marketplace image from an API, you must enable the image for programmatic use.  In the Azure portal, find the marketplace image that you want to use and then click **Want to deploy programmatically, Get Started ->**. Enter any required information and then click **Save**."
+    },
+    "HardwareProfile": {
+      "properties": {
+        "vmSize": {
+          "type": "string",
+          "description": "Specifies the size of the virtual machine. <br><br> The enum data type is currently deprecated and will be removed by December 23rd 2023. <br><br> Recommended way to get the list of available sizes is using these APIs: <br><br> [List all available virtual machine sizes in an availability set](https://docs.microsoft.com/rest/api/compute/availabilitysets/listavailablesizes) <br><br> [List all available virtual machine sizes in a region]( https://docs.microsoft.com/en-us/rest/api/compute/resourceskus/list) <br><br> [List all available virtual machine sizes for resizing](https://docs.microsoft.com/rest/api/compute/virtualmachines/listavailablesizes). For more information about virtual machine sizes, see [Sizes for virtual machines](https://docs.microsoft.com/en-us/azure/virtual-machines/sizes). <br><br> The available VM sizes depend on region and availability set.",
+          "enum": [
+            "Basic_A0",
+            "Basic_A1",
+            "Basic_A2",
+            "Basic_A3",
+            "Basic_A4",
+            "Standard_A0",
+            "Standard_A1",
+            "Standard_A2",
+            "Standard_A3",
+            "Standard_A4",
+            "Standard_A5",
+            "Standard_A6",
+            "Standard_A7",
+            "Standard_A8",
+            "Standard_A9",
+            "Standard_A10",
+            "Standard_A11",
+            "Standard_A1_v2",
+            "Standard_A2_v2",
+            "Standard_A4_v2",
+            "Standard_A8_v2",
+            "Standard_A2m_v2",
+            "Standard_A4m_v2",
+            "Standard_A8m_v2",
+            "Standard_B1s",
+            "Standard_B1ms",
+            "Standard_B2s",
+            "Standard_B2ms",
+            "Standard_B4ms",
+            "Standard_B8ms",
+            "Standard_D1",
+            "Standard_D2",
+            "Standard_D3",
+            "Standard_D4",
+            "Standard_D11",
+            "Standard_D12",
+            "Standard_D13",
+            "Standard_D14",
+            "Standard_D1_v2",
+            "Standard_D2_v2",
+            "Standard_D3_v2",
+            "Standard_D4_v2",
+            "Standard_D5_v2",
+            "Standard_D2_v3",
+            "Standard_D4_v3",
+            "Standard_D8_v3",
+            "Standard_D16_v3",
+            "Standard_D32_v3",
+            "Standard_D64_v3",
+            "Standard_D2s_v3",
+            "Standard_D4s_v3",
+            "Standard_D8s_v3",
+            "Standard_D16s_v3",
+            "Standard_D32s_v3",
+            "Standard_D64s_v3",
+            "Standard_D11_v2",
+            "Standard_D12_v2",
+            "Standard_D13_v2",
+            "Standard_D14_v2",
+            "Standard_D15_v2",
+            "Standard_DS1",
+            "Standard_DS2",
+            "Standard_DS3",
+            "Standard_DS4",
+            "Standard_DS11",
+            "Standard_DS12",
+            "Standard_DS13",
+            "Standard_DS14",
+            "Standard_DS1_v2",
+            "Standard_DS2_v2",
+            "Standard_DS3_v2",
+            "Standard_DS4_v2",
+            "Standard_DS5_v2",
+            "Standard_DS11_v2",
+            "Standard_DS12_v2",
+            "Standard_DS13_v2",
+            "Standard_DS14_v2",
+            "Standard_DS15_v2",
+            "Standard_DS13-4_v2",
+            "Standard_DS13-2_v2",
+            "Standard_DS14-8_v2",
+            "Standard_DS14-4_v2",
+            "Standard_E2_v3",
+            "Standard_E4_v3",
+            "Standard_E8_v3",
+            "Standard_E16_v3",
+            "Standard_E32_v3",
+            "Standard_E64_v3",
+            "Standard_E2s_v3",
+            "Standard_E4s_v3",
+            "Standard_E8s_v3",
+            "Standard_E16s_v3",
+            "Standard_E32s_v3",
+            "Standard_E64s_v3",
+            "Standard_E32-16_v3",
+            "Standard_E32-8s_v3",
+            "Standard_E64-32s_v3",
+            "Standard_E64-16s_v3",
+            "Standard_F1",
+            "Standard_F2",
+            "Standard_F4",
+            "Standard_F8",
+            "Standard_F16",
+            "Standard_F1s",
+            "Standard_F2s",
+            "Standard_F4s",
+            "Standard_F8s",
+            "Standard_F16s",
+            "Standard_F2s_v2",
+            "Standard_F4s_v2",
+            "Standard_F8s_v2",
+            "Standard_F16s_v2",
+            "Standard_F32s_v2",
+            "Standard_F64s_v2",
+            "Standard_F72s_v2",
+            "Standard_G1",
+            "Standard_G2",
+            "Standard_G3",
+            "Standard_G4",
+            "Standard_G5",
+            "Standard_GS1",
+            "Standard_GS2",
+            "Standard_GS3",
+            "Standard_GS4",
+            "Standard_GS5",
+            "Standard_GS4-8",
+            "Standard_GS4-4",
+            "Standard_GS5-16",
+            "Standard_GS5-8",
+            "Standard_H8",
+            "Standard_H16",
+            "Standard_H8m",
+            "Standard_H16m",
+            "Standard_H16r",
+            "Standard_H16mr",
+            "Standard_L4s",
+            "Standard_L8s",
+            "Standard_L16s",
+            "Standard_L32s",
+            "Standard_M64s",
+            "Standard_M64ms",
+            "Standard_M128s",
+            "Standard_M128ms",
+            "Standard_M64-32ms",
+            "Standard_M64-16ms",
+            "Standard_M128-64ms",
+            "Standard_M128-32ms",
+            "Standard_NC6",
+            "Standard_NC12",
+            "Standard_NC24",
+            "Standard_NC24r",
+            "Standard_NC6s_v2",
+            "Standard_NC12s_v2",
+            "Standard_NC24s_v2",
+            "Standard_NC24rs_v2",
+            "Standard_NC6s_v3",
+            "Standard_NC12s_v3",
+            "Standard_NC24s_v3",
+            "Standard_NC24rs_v3",
+            "Standard_ND6s",
+            "Standard_ND12s",
+            "Standard_ND24s",
+            "Standard_ND24rs",
+            "Standard_NV6",
+            "Standard_NV12",
+            "Standard_NV24"
+          ],
+          "x-ms-enum": {
+            "name": "VirtualMachineSizeTypes",
+            "modelAsString": true
+          }
+        }
+      },
+      "description": "Specifies the hardware settings for the virtual machine."
+    },
+    "ImageReference": {
+      "properties": {
+        "publisher": {
+          "type": "string",
+          "description": "The image publisher."
+        },
+        "offer": {
+          "type": "string",
+          "description": "Specifies the offer of the platform image or marketplace image used to create the virtual machine."
+        },
+        "sku": {
+          "type": "string",
+          "description": "The image SKU."
+        },
+        "version": {
+          "type": "string",
+          "description": "Specifies the version of the platform image or marketplace image used to create the virtual machine. The allowed formats are Major.Minor.Build or 'latest'. Major, Minor, and Build are decimal numbers. Specify 'latest' to use the latest version of an image available at deploy time. Even if you use 'latest', the VM image will not automatically update after deploy time even if a new version becomes available."
+        },
+        "exactVersion": {
+          "type": "string",
+          "readOnly": true,
+          "description": "Specifies in decimal numbers, the version of platform image or marketplace image used to create the virtual machine. This readonly field differs from 'version', only if the value specified in 'version' field is 'latest'."
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/SubResource"
+        }
+      ],
+      "description": "Specifies information about the image to use. You can specify information about platform images, marketplace images, or virtual machine images. This element is required when you want to use a platform image, marketplace image, or virtual machine image, but is not used in other creation operations. NOTE: Image reference publisher and offer can only be set when you create the scale set."
+    },
+    "KeyVaultSecretReference": {
+      "properties": {
+        "secretUrl": {
+          "type": "string",
+          "description": "The URL referencing a secret in a Key Vault."
+        },
+        "sourceVault": {
+          "$ref": "#/definitions/SubResource",
+          "description": "The relative URL of the Key Vault containing the secret."
+        }
+      },
+      "required": [
+        "secretUrl",
+        "sourceVault"
+      ],
+      "description": "Describes a reference to Key Vault Secret"
+    },
+    "DiskEncryptionSetParameters": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/SubResource"
+        }
+      ],
+      "description": "Describes the parameter of customer managed disk encryption set resource id that can be specified for disk. <br><br> NOTE: The disk encryption set resource id can only be specified for managed disk. Please refer https://aka.ms/mdssewithcmkoverview for more details."
+    },
+    "KeyVaultKeyReference": {
+      "properties": {
+        "keyUrl": {
+          "type": "string",
+          "description": "The URL referencing a key encryption key in Key Vault."
+        },
+        "sourceVault": {
+          "$ref": "#/definitions/SubResource",
+          "description": "The relative URL of the Key Vault containing the key."
+        }
+      },
+      "required": [
+        "keyUrl",
+        "sourceVault"
+      ],
+      "description": "Describes a reference to Key Vault Key"
+    },
+    "DiskEncryptionSettings": {
+      "properties": {
+        "diskEncryptionKey": {
+          "$ref": "#/definitions/KeyVaultSecretReference",
+          "description": "Specifies the location of the disk encryption key, which is a Key Vault Secret."
+        },
+        "keyEncryptionKey": {
+          "$ref": "#/definitions/KeyVaultKeyReference",
+          "description": "Specifies the location of the key encryption key in Key Vault."
+        },
+        "enabled": {
+          "type": "boolean",
+          "description": "Specifies whether disk encryption should be enabled on the virtual machine."
+        }
+      },
+      "description": "Describes a Encryption Settings for a Disk"
+    },
+    "VirtualHardDisk": {
+      "properties": {
+        "uri": {
+          "type": "string",
+          "description": "Specifies the virtual hard disk's uri."
+        }
+      },
+      "description": "Describes the uri of a disk."
+    },
+    "Caching": {
+      "type": "string",
+      "description": "Specifies the caching requirements. <br><br> Possible values are: <br><br> **None** <br><br> **ReadOnly** <br><br> **ReadWrite** <br><br> Default: **None for Standard storage. ReadOnly for Premium storage**",
+      "enum": [
+        "None",
+        "ReadOnly",
+        "ReadWrite"
+      ],
+      "x-ms-enum": {
+        "name": "CachingTypes",
+        "modelAsString": false
+      }
+    },
+    "CreateOption": {
+      "type": "string",
+      "description": "Specifies how the virtual machine should be created.<br><br> Possible values are:<br><br> **Attach** \\u2013 This value is used when you are using a specialized disk to create the virtual machine.<br><br> **FromImage** \\u2013 This value is used when you are using an image to create the virtual machine. If you are using a platform image, you also use the imageReference element described above. If you are using a marketplace image, you  also use the plan element previously described.",
+      "enum": [
+        "FromImage",
+        "Empty",
+        "Attach"
+      ],
+      "x-ms-enum": {
+        "name": "DiskCreateOptionTypes",
+        "modelAsString": true
+      }
+    },
+    "DetachOption": {
+      "type": "string",
+      "description": "Specifies the detach behavior to be used while detaching a disk or which is already in the process of detachment from the virtual machine. Supported values: **ForceDetach**. <br><br> detachOption: **ForceDetach** is applicable only for managed data disks. If a previous detachment attempt of the data disk did not complete due to an unexpected failure from the virtual machine and the disk is still not released then use force-detach as a last resort option to detach the disk forcibly from the VM. All writes might not have been flushed when using this detach behavior. <br><br> This feature is still in preview mode and is not supported for VirtualMachineScaleSet. To force-detach a data disk update toBeDetached to 'true' along with setting detachOption: 'ForceDetach'.",
+      "enum": [
+        "ForceDetach"
+      ],
+      "x-ms-enum": {
+        "name": "DiskDetachOptionTypes",
+        "modelAsString": true
+      }
+    },
+    "StorageAccountType": {
+      "type": "string",
+      "description": "Specifies the storage account type for the managed disk. Managed OS disk storage account type can only be set when you create the scale set. NOTE: UltraSSD_LRS can only be used with data disks. It cannot be used with OS Disk. Standard_LRS uses Standard HDD. StandardSSD_LRS uses Standard SSD. Premium_LRS uses Premium SSD. UltraSSD_LRS uses Ultra disk. Premium_ZRS uses Premium SSD zone redundant storage. StandardSSD_ZRS uses Standard SSD zone redundant storage. For more information regarding disks supported for Windows Virtual Machines, refer to https://docs.microsoft.com/en-us/azure/virtual-machines/windows/disks-types and, for Linux Virtual Machines, refer to https://docs.microsoft.com/en-us/azure/virtual-machines/linux/disks-types",
+      "enum": [
+        "Standard_LRS",
+        "Premium_LRS",
+        "StandardSSD_LRS",
+        "UltraSSD_LRS",
+        "Premium_ZRS",
+        "StandardSSD_ZRS"
+      ],
+      "x-ms-enum": {
+        "name": "StorageAccountTypes",
+        "modelAsString": true
+      }
+    },
+    "DiffDiskOption": {
+      "type": "string",
+      "description": "Specifies the ephemeral disk option for operating system disk.",
+      "enum": [
+        "Local"
+      ],
+      "x-ms-enum": {
+        "name": "DiffDiskOptions",
+        "modelAsString": true
+      }
+    },
+    "DiffDiskPlacement": {
+      "type": "string",
+      "description": "Specifies the ephemeral disk placement for operating system disk. This property can be used by user in the request to choose the location i.e, cache disk or resource disk space for Ephemeral OS disk provisioning. For more information on Ephemeral OS disk size requirements, please refer Ephemeral OS disk size requirements for Windows VM at https://docs.microsoft.com/en-us/azure/virtual-machines/windows/ephemeral-os-disks#size-requirements and Linux VM at https://docs.microsoft.com/en-us/azure/virtual-machines/linux/ephemeral-os-disks#size-requirements",
+      "enum": [
+        "CacheDisk",
+        "ResourceDisk"
+      ],
+      "x-ms-enum": {
+        "name": "DiffDiskPlacement",
+        "modelAsString": true
+      }
+    },
+    "DiffDiskSettings": {
+      "properties": {
+        "option": {
+          "$ref": "#/definitions/DiffDiskOption",
+          "description": "Specifies the ephemeral disk settings for operating system disk."
+        },
+        "placement": {
+          "$ref": "#/definitions/DiffDiskPlacement",
+          "description": "Specifies the ephemeral disk placement for operating system disk.<br><br> Possible values are: <br><br> **CacheDisk** <br><br> **ResourceDisk** <br><br> Default: **CacheDisk** if one is configured for the VM size otherwise **ResourceDisk** is used.<br><br> Refer to VM size documentation for Windows VM at https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes and Linux VM at https://docs.microsoft.com/en-us/azure/virtual-machines/linux/sizes to check which VM sizes exposes a cache disk."
+        }
+      },
+      "description": "Describes the parameters of ephemeral disk settings that can be specified for operating system disk. <br><br> NOTE: The ephemeral disk settings can only be specified for managed disk."
+    },
+    "ManagedDiskParameters": {
+      "properties": {
+        "storageAccountType": {
+          "$ref": "#/definitions/StorageAccountType",
+          "description": "Specifies the storage account type for the managed disk. NOTE: UltraSSD_LRS can only be used with data disks, it cannot be used with OS Disk."
+        },
+        "diskEncryptionSet": {
+          "$ref": "#/definitions/DiskEncryptionSetParameters",
+          "description": "Specifies the customer managed disk encryption set resource id for the managed disk."
+        }
+      },
+      "allOf": [
+        {
+          "$ref": "#/definitions/SubResource"
+        }
+      ],
+      "description": "The parameters of a managed disk."
+    },
+    "OSDisk": {
+      "properties": {
+        "osType": {
+          "type": "string",
+          "description": "This property allows you to specify the type of the OS that is included in the disk if creating a VM from user-image or a specialized VHD. <br><br> Possible values are: <br><br> **Windows** <br><br> **Linux**",
+          "enum": [
+            "Windows",
+            "Linux"
+          ],
+          "x-ms-enum": {
+            "name": "OperatingSystemTypes",
+            "modelAsString": false
+          }
+        },
+        "encryptionSettings": {
+          "$ref": "#/definitions/DiskEncryptionSettings",
+          "description": "Specifies the encryption settings for the OS Disk. <br><br> Minimum api-version: 2015-06-15"
+        },
+        "name": {
+          "type": "string",
+          "description": "The disk name."
+        },
+        "vhd": {
+          "$ref": "#/definitions/VirtualHardDisk",
+          "description": "The virtual hard disk."
+        },
+        "image": {
+          "$ref": "#/definitions/VirtualHardDisk",
+          "description": "The source user image virtual hard disk. The virtual hard disk will be copied before being attached to the virtual machine. If SourceImage is provided, the destination virtual hard drive must not exist."
+        },
+        "caching": {
+          "$ref": "#/definitions/Caching",
+          "description": "Specifies the caching requirements. <br><br> Possible values are: <br><br> **None** <br><br> **ReadOnly** <br><br> **ReadWrite** <br><br> Default: **None** for Standard storage. **ReadOnly** for Premium storage."
+        },
+        "writeAcceleratorEnabled": {
+          "type": "boolean",
+          "description": "Specifies whether writeAccelerator should be enabled or disabled on the disk."
+        },
+        "diffDiskSettings": {
+          "$ref": "#/definitions/DiffDiskSettings",
+          "description": "Specifies the ephemeral Disk Settings for the operating system disk used by the virtual machine."
+        },
+        "createOption": {
+          "$ref": "#/definitions/CreateOption",
+          "description": "Specifies how the virtual machine should be created.<br><br> Possible values are:<br><br> **Attach** \\u2013 This value is used when you are using a specialized disk to create the virtual machine.<br><br> **FromImage** \\u2013 This value is used when you are using an image to create the virtual machine. If you are using a platform image, you also use the imageReference element described above. If you are using a marketplace image, you  also use the plan element previously described."
+        },
+        "diskSizeGB": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Specifies the size of an empty data disk in gigabytes. This element can be used to overwrite the size of the disk in a virtual machine image. <br><br> This value cannot be larger than 1023 GB"
+        },
+        "managedDisk": {
+          "description": "The managed disk parameters.",
+          "$ref": "#/definitions/ManagedDiskParameters"
+        }
+      },
+      "required": [
+        "createOption"
+      ],
+      "description": "Specifies information about the operating system disk used by the virtual machine. <br><br> For more information about disks, see [About disks and VHDs for Azure virtual machines](https://docs.microsoft.com/azure/virtual-machines/virtual-machines-windows-about-disks-vhds?toc=%2fazure%2fvirtual-machines%2fwindows%2ftoc.json)."
+    },
+    "DataDisk": {
+      "properties": {
+        "lun": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Specifies the logical unit number of the data disk. This value is used to identify data disks within the VM and therefore must be unique for each data disk attached to a VM."
+        },
+        "name": {
+          "type": "string",
+          "description": "The disk name."
+        },
+        "vhd": {
+          "$ref": "#/definitions/VirtualHardDisk",
+          "description": "The virtual hard disk."
+        },
+        "image": {
+          "$ref": "#/definitions/VirtualHardDisk",
+          "description": "The source user image virtual hard disk. The virtual hard disk will be copied before being attached to the virtual machine. If SourceImage is provided, the destination virtual hard drive must not exist."
+        },
+        "caching": {
+          "$ref": "#/definitions/Caching",
+          "description": "Specifies the caching requirements. <br><br> Possible values are: <br><br> **None** <br><br> **ReadOnly** <br><br> **ReadWrite** <br><br> Default: **None for Standard storage. ReadOnly for Premium storage**"
+        },
+        "writeAcceleratorEnabled": {
+          "type": "boolean",
+          "description": "Specifies whether writeAccelerator should be enabled or disabled on the disk."
+        },
+        "createOption": {
+          "$ref": "#/definitions/CreateOption",
+          "description": "Specifies how the virtual machine should be created.<br><br> Possible values are:<br><br> **Attach** \\u2013 This value is used when you are using a specialized disk to create the virtual machine.<br><br> **FromImage** \\u2013 This value is used when you are using an image to create the virtual machine. If you are using a platform image, you also use the imageReference element described above. If you are using a marketplace image, you  also use the plan element previously described."
+        },
+        "diskSizeGB": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Specifies the size of an empty data disk in gigabytes. This element can be used to overwrite the size of the disk in a virtual machine image. <br><br> This value cannot be larger than 1023 GB"
+        },
+        "managedDisk": {
+          "description": "The managed disk parameters.",
+          "$ref": "#/definitions/ManagedDiskParameters"
+        },
+        "toBeDetached": {
+          "type": "boolean",
+          "description": "Specifies whether the data disk is in process of detachment from the VirtualMachine/VirtualMachineScaleset"
+        },
+        "diskIOPSReadWrite": {
+          "type": "integer",
+          "readOnly": true,
+          "format": "int64",
+          "description": "Specifies the Read-Write IOPS for the managed disk when StorageAccountType is UltraSSD_LRS. Returned only for VirtualMachine ScaleSet VM disks. Can be updated only via updates to the VirtualMachine Scale Set."
+        },
+        "diskMBpsReadWrite": {
+          "type": "integer",
+          "readOnly": true,
+          "format": "int64",
+          "description": "Specifies the bandwidth in MB per second for the managed disk when StorageAccountType is UltraSSD_LRS. Returned only for VirtualMachine ScaleSet VM disks. Can be updated only via updates to the VirtualMachine Scale Set."
+        },
+        "detachOption": {
+          "$ref": "#/definitions/DetachOption",
+          "description": "Specifies the detach behavior to be used while detaching a disk or which is already in the process of detachment from the virtual machine. Supported values: **ForceDetach**. <br><br> detachOption: **ForceDetach** is applicable only for managed data disks. If a previous detachment attempt of the data disk did not complete due to an unexpected failure from the virtual machine and the disk is still not released then use force-detach as a last resort option to detach the disk forcibly from the VM. All writes might not have been flushed when using this detach behavior. <br><br> This feature is still in preview mode and is not supported for VirtualMachineScaleSet. To force-detach a data disk update toBeDetached to 'true' along with setting detachOption: 'ForceDetach'."
+        }
+      },
+      "required": [
+        "lun",
+        "createOption"
+      ],
+      "description": "Describes a data disk."
+    },
+    "StorageProfile": {
+      "properties": {
+        "imageReference": {
+          "$ref": "#/definitions/ImageReference",
+          "description": "Specifies information about the image to use. You can specify information about platform images, marketplace images, or virtual machine images. This element is required when you want to use a platform image, marketplace image, or virtual machine image, but is not used in other creation operations."
+        },
+        "osDisk": {
+          "$ref": "#/definitions/OSDisk",
+          "description": "Specifies information about the operating system disk used by the virtual machine. <br><br> For more information about disks, see [About disks and VHDs for Azure virtual machines](https://docs.microsoft.com/azure/virtual-machines/virtual-machines-windows-about-disks-vhds?toc=%2fazure%2fvirtual-machines%2fwindows%2ftoc.json)."
+        },
+        "dataDisks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DataDisk"
+          },
+          "description": "Specifies the parameters that are used to add a data disk to a virtual machine. <br><br> For more information about disks, see [About disks and VHDs for Azure virtual machines](https://docs.microsoft.com/azure/virtual-machines/virtual-machines-windows-about-disks-vhds?toc=%2fazure%2fvirtual-machines%2fwindows%2ftoc.json)."
+        }
+      },
+      "description": "Specifies the storage settings for the virtual machine disks."
+    },
+    "UefiSettings": {
+      "properties": {
+        "secureBootEnabled": {
+          "type": "boolean",
+          "description": "Specifies whether secure boot should be enabled on the virtual machine. <br><br>Minimum api-version: 2020-12-01"
+        },
+        "vTpmEnabled": {
+          "type": "boolean",
+          "description": "Specifies whether vTPM should be enabled on the virtual machine. <br><br>Minimum api-version: 2020-12-01"
+        }
+      },
+      "description": "Specifies the security settings like secure boot and vTPM used while creating the virtual machine. <br><br>Minimum api-version: 2020-12-01"
+    },
+    "SecurityProfile": {
+      "properties": {
+        "uefiSettings": {
+          "$ref": "#/definitions/UefiSettings",
+          "description": "Specifies the security settings like secure boot and vTPM used while creating the virtual machine. <br><br>Minimum api-version: 2020-12-01"
+        },
+        "encryptionAtHost": {
+          "type": "boolean",
+          "description": "This property can be used by user in the request to enable or disable the Host Encryption for the virtual machine or virtual machine scale set. This will enable the encryption for all the disks including Resource/Temp disk at host itself. <br><br> Default: The Encryption at host will be disabled unless this property is set to true for the resource."
+        },
+        "securityType": {
+          "type": "string",
+          "description": "Specifies the SecurityType of the virtual machine. It is set as TrustedLaunch to enable UefiSettings. <br><br> Default: UefiSettings will not be enabled unless this property is set as TrustedLaunch.",
+          "enum": [
+            "TrustedLaunch"
+          ],
+          "x-ms-enum": {
+            "name": "SecurityTypes",
+            "modelAsString": false
+          }
+        }
+      },
+      "description": "Specifies the Security profile settings for the virtual machine or virtual machine scale set."
+    },
+    "AdditionalCapabilities": {
+      "properties": {
+        "ultraSSDEnabled": {
+          "type": "boolean",
+          "description": "The flag that enables or disables a capability to have one or more managed data disks with UltraSSD_LRS storage account type on the VM or VMSS. Managed disks with storage account type UltraSSD_LRS can be added to a virtual machine or virtual machine scale set only if this property is enabled."
+        }
+      },
+      "description": "Enables or disables a capability on the virtual machine or virtual machine scale set."
+    },
+    "AdditionalUnattendContent": {
+      "properties": {
+        "passName": {
+          "type": "string",
+          "description": "The pass name. Currently, the only allowable value is OobeSystem.",
+          "enum": [
+            "OobeSystem"
+          ],
+          "x-ms-enum": {
+            "name": "PassNames",
+            "modelAsString": false
+          }
+        },
+        "componentName": {
+          "type": "string",
+          "description": "The component name. Currently, the only allowable value is Microsoft-Windows-Shell-Setup.",
+          "enum": [
+            "Microsoft-Windows-Shell-Setup"
+          ],
+          "x-ms-enum": {
+            "name": "ComponentNames",
+            "modelAsString": false
+          }
+        },
+        "settingName": {
+          "type": "string",
+          "description": "Specifies the name of the setting to which the content applies. Possible values are: FirstLogonCommands and AutoLogon.",
+          "enum": [
+            "AutoLogon",
+            "FirstLogonCommands"
+          ],
+          "x-ms-enum": {
+            "name": "SettingNames",
+            "modelAsString": false
+          }
+        },
+        "content": {
+          "type": "string",
+          "description": "Specifies the XML formatted content that is added to the unattend.xml file for the specified path and component. The XML must be less than 4KB and must include the root element for the setting or feature that is being inserted."
+        }
+      },
+      "description": "Specifies additional XML formatted information that can be included in the Unattend.xml file, which is used by Windows Setup. Contents are defined by setting name, component name, and the pass in which the content is applied."
+    },
+    "WinRMListener": {
+      "properties": {
+        "protocol": {
+          "type": "string",
+          "description": "Specifies the protocol of WinRM listener. <br><br> Possible values are: <br>**http** <br><br> **https**",
+          "enum": [
+            "Http",
+            "Https"
+          ],
+          "x-ms-enum": {
+            "name": "ProtocolTypes",
+            "modelAsString": false
+          }
+        },
+        "certificateUrl": {
+          "type": "string",
+          "description": "This is the URL of a certificate that has been uploaded to Key Vault as a secret. For adding a secret to the Key Vault, see [Add a key or secret to the key vault](https://docs.microsoft.com/azure/key-vault/key-vault-get-started/#add). In this case, your certificate needs to be It is the Base64 encoding of the following JSON Object which is encoded in UTF-8: <br><br> {<br>  \"data\":\"<Base64-encoded-certificate>\",<br>  \"dataType\":\"pfx\",<br>  \"password\":\"<pfx-file-password>\"<br>}"
+        }
+      },
+      "description": "Describes Protocol and thumbprint of Windows Remote Management listener"
+    },
+    "WinRMConfiguration": {
+      "properties": {
+        "listeners": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/WinRMListener"
+          },
+          "description": "The list of Windows Remote Management listeners"
+        }
+      },
+      "description": "Describes Windows Remote Management configuration of the VM"
+    },
+    "WindowsConfiguration": {
+      "properties": {
+        "provisionVMAgent": {
+          "type": "boolean",
+          "description":
